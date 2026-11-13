@@ -1,5 +1,10 @@
 # Universal Crypto Extension
 
+[![Cross-platform build](https://github.com/Re13orn/UniversalCryptoExtension/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Re13orn/UniversalCryptoExtension/actions/workflows/build.yml)
+[![Latest release](https://img.shields.io/github/v/release/Re13orn/UniversalCryptoExtension)](https://github.com/Re13orn/UniversalCryptoExtension/releases/latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Java 17+](https://img.shields.io/badge/Java-17%2B-orange.svg)](BUILD.md)
+
 Universal Crypto Extension 是基于 Montoya API 的 Burp Suite 扩展。它按规则处理 HTTP 请求和响应，支持内置加解密、签名、字段转换、Rhino 脚本和外部密码服务。
 
 ## 快速开始
