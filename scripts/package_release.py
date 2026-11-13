@@ -23,7 +23,7 @@ def main():
     with zipfile.ZipFile(release, "w", zipfile.ZIP_DEFLATED) as archive:
         archive.write(jar, jar.name)
         archive.writestr("distribution-verification.json", json.dumps(metadata, indent=2) + "\n")
-        for name in ("README.md", "BUILD.md", "VERIFICATION.md", "LICENSE", "THIRD_PARTY_NOTICES.md"):
+        for name in ("README.md", "README.zh-CN.md", "BUILD.md", "VERIFICATION.md", "LICENSE", "THIRD_PARTY_NOTICES.md"):
             archive.write(ROOT / name, name)
         for folder in (ROOT / "skills/universal-crypto-rules", ROOT / "docs"):
             for file in sorted(folder.rglob("*")):

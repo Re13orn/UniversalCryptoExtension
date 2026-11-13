@@ -7,7 +7,7 @@
     "build.sh": "37c4a9f5d6e4c42e3a6955aa63e648d12193f996e2de64a4f4a270c1a30300af",
     "pom.xml": "0e464334b102f527c11fb6ff57cfa300a561a0b966c45ee799bf786cea2eb468",
     "scripts/generate-sm2-vector.py": "ed95c87b2c99878122b348cf6934ee0d25ad847adfb13377566551b276198e5a",
-    "scripts/package_release.py": "b0a099ea9b8afdbca8d74ad96c4427e7419cd07b79f9075ee6143559acd5b2e7",
+    "scripts/package_release.py": "0a179df4d11501adf825131275b6e2ef982b0f78615b7df09d59868641b7f7a8",
     "scripts/sync_skill.py": "043bacceab0fbecc0ade8b570ae17e46be97bc02ed7c865ae1eff27721b081fa",
     "scripts/test_maintenance.py": "497981ffed8925034dbd382c43ee6e75e733e66b4292736686fca0379283437a",
     "scripts/verify_distribution.py": "bafcbf56ad177f5dd6f7d8e9ae9209bfe953d5a97d5e9b96c80982d1ca4dadbb",
