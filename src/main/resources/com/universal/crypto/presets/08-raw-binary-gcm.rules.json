@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "engineBuild": "rhino-1.8.1-sandbox-v1",
+  "rules": [
+    {
+      "id": "08-raw-binary-gcm",
+      "name": "08-raw-binary-gcm",
+      "category": "可验证示例",
+      "description": "合成 key/IV；实际 response-send 返回 byte 数组，精确写回 gzip 头样例字节，不进行 gzip 解压。",
+      "enabled": false,
+      "priority": 100,
+      "showInEditor": true,
+      "condition": {
+        "hosts": [
+          "api.example.test"
+        ],
+        "paths": [
+          "/api/*"
+        ],
+        "methods": [
+          "POST"
+        ],
+        "toolSource": "ANY"
+      },
+      "requestActions": [],
+      "responseActions": [
+        {
+          "actionType": "decrypt",
+          "targetType": "body",
+          "processor": "script",
+          "enabled": true,
+          "config": {
+            "executionPhase": "response-send",
+            "inputSource": "response-body",
+            "scriptCode": "return Crypto.aesGcmDecrypt(Bytes.fromBase64('AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8='),Bytes.fromBase64('AAECAwQFBgcICQoL'),bodyBytes,null);"
+          }
+        }
+      ]
+    }
+  ]
+}

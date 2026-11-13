@@ -1,0 +1,20 @@
+{
+  "cases": [
+    {
+      "name": "replace existing nested string",
+      "direction": "request",
+      "route": "wire",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json",
+        "X-Name": "new"
+      },
+      "body": "{\"data\":{\"name\":\"old\",\"count\":1}}",
+      "expect": {
+        "body": "{\"data\":{\"name\":\"new\",\"count\":1}}",
+        "success": true
+      }
+    }
+  ]
+}

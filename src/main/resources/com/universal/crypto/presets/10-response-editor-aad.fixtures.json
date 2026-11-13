@@ -1,0 +1,147 @@
+{
+  "cases": [
+    {
+      "name": "view original",
+      "direction": "response",
+      "route": "response-display",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "36"
+      },
+      "requestHeaders": {
+        "X-Nonce": "nonce-one"
+      },
+      "body": "PCCgeqmQpzm3cOo62ZEfYjYBp8jqJlsWBx9w",
+      "expect": {
+        "success": true,
+        "body": "{\"value\":1}"
+      }
+    },
+    {
+      "name": "encrypt edited plaintext and sign ciphertext",
+      "direction": "response",
+      "route": "response-editor-send",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "11"
+      },
+      "requestHeaders": {
+        "X-Nonce": "nonce-one"
+      },
+      "body": "{\"value\":2}",
+      "expect": {
+        "success": true,
+        "body": "PCCgeqmQpzm3c+qfG5sRUvhXiy2PukX40CoJ",
+        "headers": {
+          "X-Response-Signature": "k6l3SFkV+ttLst1QhZOhsWhHXtq8/iLn7BI6dnRdMk0="
+        }
+      }
+    },
+    {
+      "name": "client can decrypt edited ciphertext",
+      "direction": "response",
+      "route": "response-display",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "36"
+      },
+      "requestHeaders": {
+        "X-Nonce": "nonce-one"
+      },
+      "body": "PCCgeqmQpzm3c+qfG5sRUvhXiy2PukX40CoJ",
+      "expect": {
+        "success": true,
+        "body": "{\"value\":2}"
+      }
+    },
+    {
+      "name": "wire must not re-encrypt PCCgeqmQ",
+      "direction": "response",
+      "route": "wire",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "36"
+      },
+      "requestHeaders": {
+        "X-Nonce": "nonce-one"
+      },
+      "body": "PCCgeqmQpzm3cOo62ZEfYjYBp8jqJlsWBx9w",
+      "expect": {
+        "body": "PCCgeqmQpzm3cOo62ZEfYjYBp8jqJlsWBx9w",
+        "unchanged": true,
+        "headers": {
+          "Content-Length": "36"
+        },
+        "errors": 0
+      }
+    },
+    {
+      "name": "wire must not re-encrypt PCCgeqmQ",
+      "direction": "response",
+      "route": "wire",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "36"
+      },
+      "requestHeaders": {
+        "X-Nonce": "nonce-one"
+      },
+      "body": "PCCgeqmQpzm3c+qfG5sRUvhXiy2PukX40CoJ",
+      "expect": {
+        "body": "PCCgeqmQpzm3c+qfG5sRUvhXiy2PukX40CoJ",
+        "unchanged": true,
+        "headers": {
+          "Content-Length": "36"
+        },
+        "errors": 0
+      }
+    },
+    {
+      "name": "wrong nonce rejects decryption",
+      "direction": "response",
+      "route": "response-display",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "36"
+      },
+      "requestHeaders": {
+        "X-Nonce": "wrong"
+      },
+      "body": "PCCgeqmQpzm3cOo62ZEfYjYBp8jqJlsWBx9w",
+      "expect": {
+        "matched": true,
+        "success": false
+      }
+    },
+    {
+      "name": "non-target host",
+      "direction": "response",
+      "route": "response-editor-send",
+      "method": "POST",
+      "url": "https://other.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json",
+        "Content-Length": "11"
+      },
+      "requestHeaders": {
+        "X-Nonce": "nonce-one"
+      },
+      "body": "{\"value\":2}",
+      "expect": {
+        "matched": false
+      }
+    }
+  ]
+}

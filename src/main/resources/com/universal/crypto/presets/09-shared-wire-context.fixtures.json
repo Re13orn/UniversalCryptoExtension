@@ -1,0 +1,67 @@
+{
+  "cases": [
+    {
+      "name": "request A stores nonce",
+      "direction": "request",
+      "route": "wire",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"nonce\":\"A\"}",
+      "expect": {
+        "body": "{\"nonce\":\"A\"}",
+        "success": true
+      },
+      "messageId": 11
+    },
+    {
+      "name": "request B stores nonce",
+      "direction": "request",
+      "route": "wire",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"nonce\":\"B\"}",
+      "expect": {
+        "success": true
+      },
+      "messageId": 12
+    },
+    {
+      "name": "response B reads own nonce",
+      "direction": "response",
+      "route": "wire",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "ciphertext",
+      "expect": {
+        "body": "B",
+        "success": true
+      },
+      "messageId": 12
+    },
+    {
+      "name": "response A reads own nonce",
+      "direction": "response",
+      "route": "wire",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "ciphertext",
+      "expect": {
+        "body": "A",
+        "success": true
+      },
+      "messageId": 11
+    }
+  ]
+}

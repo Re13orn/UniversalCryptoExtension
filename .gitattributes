@@ -1,0 +1,2 @@
+# Preserve the bytes of maintained resources across Git checkouts.
+* -text

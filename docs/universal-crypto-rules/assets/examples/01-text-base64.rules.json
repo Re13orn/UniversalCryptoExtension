@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "engineBuild": "rhino-1.8.1-sandbox-v1",
+  "rules": [
+    {
+      "id": "01-text-base64",
+      "name": "01-text-base64",
+      "category": "可验证示例",
+      "description": "仅演示文本编码，不是加密。",
+      "enabled": false,
+      "priority": 100,
+      "showInEditor": true,
+      "condition": {
+        "hosts": [
+          "api.example.test"
+        ],
+        "paths": [
+          "/api/*"
+        ],
+        "methods": [
+          "POST"
+        ],
+        "toolSource": "ANY"
+      },
+      "requestActions": [
+        {
+          "actionType": "encrypt",
+          "targetType": "body",
+          "processor": "crypto",
+          "enabled": true,
+          "config": {
+            "algorithm": "base64",
+            "cryptoProvider": "internal",
+            "keySource": "none",
+            "executionPhase": "send",
+            "inputSource": "request-body",
+            "payloadFormat": "raw",
+            "charset": "UTF-8"
+          }
+        }
+      ],
+      "responseActions": []
+    }
+  ]
+}

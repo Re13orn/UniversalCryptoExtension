@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "engineBuild": "rhino-1.8.1-sandbox-v1",
+  "rules": [
+    {
+      "id": "07-json-field",
+      "name": "07-json-field",
+      "category": "可验证示例",
+      "description": "受限 JSONPath，替换字符串；数字/布尔对象值另用脚本。",
+      "enabled": false,
+      "priority": 100,
+      "showInEditor": true,
+      "condition": {
+        "hosts": [
+          "api.example.test"
+        ],
+        "paths": [
+          "/api/*"
+        ],
+        "methods": [
+          "POST"
+        ],
+        "toolSource": "ANY"
+      },
+      "requestActions": [
+        {
+          "actionType": "replace",
+          "targetType": "field",
+          "processor": "field",
+          "enabled": true,
+          "config": {
+            "executionPhase": "send",
+            "inputSource": "request-body",
+            "operation": "replace",
+            "fieldPath": "$.data.name",
+            "from": "auto",
+            "to": "${header.X-Name}"
+          }
+        }
+      ],
+      "responseActions": []
+    }
+  ]
+}

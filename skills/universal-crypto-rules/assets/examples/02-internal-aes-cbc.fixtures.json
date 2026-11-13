@@ -1,0 +1,34 @@
+{
+  "cases": [
+    {
+      "name": "decrypt JSON field",
+      "direction": "response",
+      "route": "response-display",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"payload\":\"f9Etr7fpWZ0LhJrYwuPCHw==\",\"iv\":\"AAECAwQFBgcICQoLDA0ODw==\"}",
+      "expect": {
+        "body": "{\"payload\":\"hello\",\"iv\":\"AAECAwQFBgcICQoLDA0ODw==\"}",
+        "success": true
+      }
+    },
+    {
+      "name": "display leaves wire unchanged",
+      "direction": "response",
+      "route": "wire",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"payload\":\"f9Etr7fpWZ0LhJrYwuPCHw==\",\"iv\":\"AAECAwQFBgcICQoLDA0ODw==\"}",
+      "expect": {
+        "body": "{\"payload\":\"f9Etr7fpWZ0LhJrYwuPCHw==\",\"iv\":\"AAECAwQFBgcICQoLDA0ODw==\"}",
+        "unchanged": true
+      }
+    }
+  ]
+}

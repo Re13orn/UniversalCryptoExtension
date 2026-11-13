@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "name": "UTF-8 encode",
+      "direction": "request",
+      "route": "wire",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "hello中文",
+      "expect": {
+        "body": "aGVsbG/kuK3mloc=",
+        "success": true,
+        "errors": 0
+      }
+    },
+    {
+      "name": "outside scope",
+      "direction": "request",
+      "route": "wire",
+      "method": "POST",
+      "url": "https://other.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "hello",
+      "expect": {
+        "body": "hello",
+        "matched": false,
+        "unchanged": true
+      }
+    }
+  ]
+}

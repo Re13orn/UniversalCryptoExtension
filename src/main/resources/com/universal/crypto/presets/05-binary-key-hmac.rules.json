@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "engineBuild": "rhino-1.8.1-sandbox-v1",
+  "rules": [
+    {
+      "id": "05-binary-key-hmac",
+      "name": "05-binary-key-hmac",
+      "category": "可验证示例",
+      "description": "二进制 HMAC key 必须解码；Header 目标显式输入正文。",
+      "enabled": false,
+      "priority": 100,
+      "showInEditor": true,
+      "condition": {
+        "hosts": [
+          "api.example.test"
+        ],
+        "paths": [
+          "/api/*"
+        ],
+        "methods": [
+          "POST"
+        ],
+        "toolSource": "ANY"
+      },
+      "requestActions": [
+        {
+          "actionType": "sign",
+          "targetType": "header",
+          "processor": "script",
+          "enabled": true,
+          "config": {
+            "executionPhase": "send",
+            "inputSource": "request-body",
+            "scriptCode": "return Bytes.toBase64(Crypto.hmacSha256(Bytes.fromBase64('AAECAwQFBgcICQoLDA0ODw=='),Bytes.utf8(content)));"
+          },
+          "targetName": "X-Signature"
+        }
+      ],
+      "responseActions": []
+    }
+  ]
+}

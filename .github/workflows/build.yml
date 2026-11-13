@@ -1,0 +1,33 @@
+name: Cross-platform build
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        java: ['17', '21']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: maven
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and run Java tests
+        run: mvn -B -ntp clean verify
+      - name: Verify the distribution JAR
+        run: python scripts/verify_distribution.py --crypto-classpath target/test-classes
+      - name: Check distribution tooling
+        run: python -m unittest discover -s scripts -p test_maintenance.py
+      - name: Replay rules using only the distribution JAR
+        run: python skills/universal-crypto-rules/scripts/check_rule.py --jar target/universal-crypto-extension-1.0.0.jar --rules skills/universal-crypto-rules/assets/examples/01-text-base64.rules.json --fixtures skills/universal-crypto-rules/assets/examples/01-text-base64.fixtures.json

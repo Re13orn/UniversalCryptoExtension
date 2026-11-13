@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "engineBuild": "rhino-1.8.1-sandbox-v1",
+  "rules": [
+    {
+      "id": "06-internal-hmac-signature",
+      "name": "06-internal-hmac-signature",
+      "category": "可验证示例",
+      "description": "内置 HMAC 文本 key；显式分隔符，签名字段位于 Header。",
+      "enabled": false,
+      "priority": 100,
+      "showInEditor": true,
+      "condition": {
+        "hosts": [
+          "api.example.test"
+        ],
+        "paths": [
+          "/api/*"
+        ],
+        "methods": [
+          "POST"
+        ],
+        "toolSource": "ANY"
+      },
+      "requestActions": [
+        {
+          "actionType": "sign",
+          "targetType": "header",
+          "targetName": "X-Signature",
+          "processor": "signature",
+          "enabled": true,
+          "config": {
+            "executionPhase": "send",
+            "inputSource": "request-body",
+            "algorithm": "hmac-sha256",
+            "cryptoProvider": "internal",
+            "keySource": "static",
+            "keyValue": "example-secret",
+            "signContent": "custom",
+            "customSignTemplate": "${method}\n${path}\n${body}",
+            "cipherFormat": "hex"
+          }
+        }
+      ],
+      "responseActions": []
+    }
+  ]
+}

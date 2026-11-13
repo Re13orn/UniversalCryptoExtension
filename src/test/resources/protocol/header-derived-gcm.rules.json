@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "engineBuild": "rhino-1.8.1-sandbox-v1",
+  "rules": [
+    {
+      "id": "synthetic-header-gcm-request",
+      "name": "Synthetic header-derived GCM request",
+      "description": "Offline synthetic protocol only. This is not a current vendor protocol rule.",
+      "enabled": false,
+      "priority": 100,
+      "showInEditor": true,
+      "condition": {
+        "hosts": [
+          "api.example.test"
+        ],
+        "paths": [
+          "/api/user/info"
+        ],
+        "methods": [
+          "POST"
+        ],
+        "toolSource": "ANY"
+      },
+      "requestActions": [
+        {
+          "actionType": "decrypt",
+          "targetType": "body",
+          "processor": "script",
+          "enabled": true,
+          "config": {
+            "executionPhase": "display",
+            "inputSource": "request-body",
+            "scriptCode": "function h(name) { return String(request.getOriginalHeader(name) || ''); }\nif (h('X-Encrypt').toLowerCase() !== 'true') return null;\nvar version = h('X-Version'), user = h('X-User-Id'), machine = h('X-Machine-Id');\nvar password = user + '_' + machine;\nvar salt = Bytes.utf8('uce:test:gcm:v1:' + version + ':' + machine);\nvar key = Crypto.pbkdf2(password, salt, 50000, 256);\nvar aad = Bytes.utf8([request.getMethod(), request.getPath(), version, user, machine, h('X-Timestamp')].join('|'));\nvar envelope = Bytes.fromBase64(content.replace(/\\s+/g, ''));\nif (envelope.length < 28) throw new Error('Invalid synthetic GCM envelope');\nreturn Bytes.text(Crypto.aesGcmDecrypt(key, envelope.slice(0,12), envelope.slice(12), aad));"
+          }
+        },
+        {
+          "actionType": "encrypt",
+          "targetType": "body",
+          "processor": "script",
+          "enabled": true,
+          "config": {
+            "executionPhase": "editor-send",
+            "inputSource": "request-body",
+            "scriptCode": "function h(name) { return String(request.getOriginalHeader(name) || ''); }\nif (h('X-Encrypt').toLowerCase() !== 'true') return null;\nvar version = h('X-Version'), user = h('X-User-Id'), machine = h('X-Machine-Id');\nvar password = user + '_' + machine;\nvar salt = Bytes.utf8('uce:test:gcm:v1:' + version + ':' + machine);\nvar key = Crypto.pbkdf2(password, salt, 50000, 256);\nvar aad = Bytes.utf8([request.getMethod(), request.getPath(), version, user, machine, h('X-Timestamp')].join('|'));\nvar plaintext = content.trim();\ntry { JSON.parse(plaintext); } catch (error) { return null; }\nvar iv = Crypto.randomBytes(12);\nvar ciphertext = Crypto.aesGcmEncrypt(key, iv, Bytes.utf8(plaintext), aad);\nreturn Bytes.toBase64(Bytes.concat(iv, ciphertext));",
+            "editorOnly": true
+          }
+        }
+      ],
+      "responseActions": []
+    },
+    {
+      "id": "synthetic-header-gcm-response",
+      "name": "Synthetic header-derived GCM response",
+      "description": "Offline synthetic protocol only. This is not a current vendor protocol rule.",
+      "enabled": false,
+      "priority": 100,
+      "showInEditor": true,
+      "condition": {
+        "hosts": [
+          "api.example.test"
+        ],
+        "paths": [
+          "/api/user/info"
+        ],
+        "methods": [
+          "POST"
+        ],
+        "toolSource": "ANY"
+      },
+      "requestActions": [],
+      "responseActions": [
+        {
+          "actionType": "decrypt",
+          "targetType": "body",
+          "processor": "script",
+          "enabled": true,
+          "config": {
+            "executionPhase": "response-display",
+            "inputSource": "response-body",
+            "scriptCode": "function h(name) { return String(request.getOriginalHeader(name) || ''); }\nif (h('X-Encrypt').toLowerCase() !== 'true') return null;\nvar version = h('X-Version'), user = h('X-User-Id'), machine = h('X-Machine-Id');\nvar password = user + '_' + machine;\nvar salt = Bytes.utf8('uce:test:gcm:v1:' + version + ':' + machine);\nvar key = Crypto.pbkdf2(password, salt, 50000, 256);\nvar aad = Bytes.utf8([request.getMethod(), request.getPath(), version, user, machine, h('X-Timestamp')].join('|'));\nvar envelope = Bytes.fromBase64(content.replace(/\\s+/g, ''));\nif (envelope.length < 28) throw new Error('Invalid synthetic GCM envelope');\nreturn Bytes.text(Crypto.aesGcmDecrypt(key, envelope.slice(0,12), envelope.slice(12), aad));"
+          }
+        },
+        {
+          "actionType": "encrypt",
+          "targetType": "body",
+          "processor": "script",
+          "enabled": true,
+          "config": {
+            "executionPhase": "response-editor-send",
+            "inputSource": "response-body",
+            "scriptCode": "function h(name) { return String(request.getOriginalHeader(name) || ''); }\nif (h('X-Encrypt').toLowerCase() !== 'true') return null;\nvar version = h('X-Version'), user = h('X-User-Id'), machine = h('X-Machine-Id');\nvar password = user + '_' + machine;\nvar salt = Bytes.utf8('uce:test:gcm:v1:' + version + ':' + machine);\nvar key = Crypto.pbkdf2(password, salt, 50000, 256);\nvar aad = Bytes.utf8([request.getMethod(), request.getPath(), version, user, machine, h('X-Timestamp')].join('|'));\nvar plaintext = content.trim();\ntry { JSON.parse(plaintext); } catch (error) { return null; }\nvar iv = Crypto.randomBytes(12);\nvar ciphertext = Crypto.aesGcmEncrypt(key, iv, Bytes.utf8(plaintext), aad);\nreturn Bytes.toBase64(Bytes.concat(iv, ciphertext));"
+          }
+        },
+        {
+          "actionType": "replace",
+          "targetType": "header",
+          "processor": "script",
+          "enabled": true,
+          "config": {
+            "executionPhase": "response-editor-send",
+            "inputSource": "response-body",
+            "scriptCode": "return String(Bytes.utf8(content).length);"
+          },
+          "targetName": "Content-Length"
+        }
+      ]
+    }
+  ]
+}

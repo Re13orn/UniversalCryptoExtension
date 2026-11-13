@@ -1,0 +1,20 @@
+{
+  "cases": [
+    {
+      "name": "raw ciphertext to raw binary",
+      "direction": "response",
+      "route": "wire",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/octet-stream"
+      },
+      "bodyBase64": "WIneGzobwhohfT5cWe9e320b5P7U3Lsr",
+      "expect": {
+        "bodyBase64": "H4sIAP/+AAE=",
+        "success": true,
+        "errors": 0
+      }
+    }
+  ]
+}

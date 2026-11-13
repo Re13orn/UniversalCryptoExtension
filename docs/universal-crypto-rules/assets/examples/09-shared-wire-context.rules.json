@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "engineBuild": "rhino-1.8.1-sandbox-v1",
+  "rules": [
+    {
+      "id": "09-shared-wire-context",
+      "name": "09-shared-wire-context",
+      "category": "可验证示例",
+      "description": "演示真实发送链的 request/response messageId 共享；不是响应展示可继承的状态。",
+      "enabled": false,
+      "priority": 100,
+      "showInEditor": true,
+      "condition": {
+        "hosts": [
+          "api.example.test"
+        ],
+        "paths": [
+          "/api/*"
+        ],
+        "methods": [
+          "POST"
+        ],
+        "toolSource": "ANY"
+      },
+      "requestActions": [
+        {
+          "actionType": "process",
+          "targetType": "body",
+          "processor": "script",
+          "enabled": true,
+          "config": {
+            "executionPhase": "send",
+            "inputSource": "request-body",
+            "scriptCode": "ctx.setSharedData('nonce',JSON.parse(content).nonce); return null;"
+          }
+        }
+      ],
+      "responseActions": [
+        {
+          "actionType": "process",
+          "targetType": "body",
+          "processor": "script",
+          "enabled": true,
+          "config": {
+            "executionPhase": "response-send",
+            "inputSource": "response-body",
+            "scriptCode": "var nonce=ctx.getSharedData('nonce'); if(nonce===null) throw new Error('Missing paired nonce'); return String(nonce);"
+          }
+        }
+      ]
+    }
+  ]
+}

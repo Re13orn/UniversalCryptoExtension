@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "engineBuild": "rhino-1.8.1-sandbox-v1",
+  "rules": [
+    {
+      "id": "02-internal-aes-cbc",
+      "name": "02-internal-aes-cbc",
+      "category": "可验证示例",
+      "description": "合成测试 key；AES-CBC JSON 顶层字段，保留 IV 外壳。",
+      "enabled": false,
+      "priority": 100,
+      "showInEditor": true,
+      "condition": {
+        "hosts": [
+          "api.example.test"
+        ],
+        "paths": [
+          "/api/*"
+        ],
+        "methods": [
+          "POST"
+        ],
+        "toolSource": "ANY"
+      },
+      "requestActions": [],
+      "responseActions": [
+        {
+          "actionType": "decrypt",
+          "targetType": "body",
+          "processor": "crypto",
+          "enabled": true,
+          "config": {
+            "algorithm": "aes-cbc",
+            "cryptoProvider": "internal",
+            "keySource": "static",
+            "keyValue": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+            "keyFormat": "hex",
+            "payloadFormat": "json",
+            "cipherField": "payload",
+            "plainField": "payload",
+            "ivField": "iv",
+            "ivFormat": "base64",
+            "cipherFormat": "base64",
+            "plainFormat": "plain",
+            "charset": "UTF-8",
+            "padding": "PKCS5Padding",
+            "executionPhase": "response-display",
+            "inputSource": "response-body"
+          }
+        }
+      ]
+    }
+  ]
+}

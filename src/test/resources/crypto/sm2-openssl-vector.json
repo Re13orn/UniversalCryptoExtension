@@ -1,0 +1,9 @@
+{
+  "implementation": "OpenSSL 3.6.3 9 Jun 2026 (Library: OpenSSL 3.6.3 9 Jun 2026)",
+  "plaintextUtf8": "SM2 independent vector / 中文",
+  "publicKeyBase64": "MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAECuuqcwY8tIsYHQpUi9u9l6UO9VbNtOtZc2yEBR8QCeBIghBDulaxAxSbAjelbOkmKIQ8rauA4Cz1NnhkO/OhlQ==",
+  "privateKeyBase64": "MIGHAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBG0wawIBAQQgPGi/leVHehONUVfFe3qIpyN78NCWTrnd34mSoZ4+SY2hRANCAAQK66pzBjy0ixgdClSL272XpQ71Vs2061lzbIQFHxAJ4EiCEEO6VrEDFJsCN6Vs6SYohDytq4DgLPU2eGQ786GV",
+  "ciphertextBase64": "BPMQJ/LOHOq+xQoX2THWnJK8hlBRS02VrbYJtsZlGmvamoAtmmoPQrlRS4n4RDPlYGlhmIAKhac8qdD90eldw5/p4UFFaYgAPmEa4AIZQ7KH9/q3A7Egz/G/te2j+TH301q1sHz8INiKZBCiBHWGWQs0sqPXEAeQ8Og5VeB/ZRk=",
+  "ciphertextFormat": "raw C1C2C3, uncompressed C1",
+  "opensslCiphertextDerBase64": "MIGJAiEA8xAn8s4c6r7FChfZMdackryGUFFLTZWttgm2xmUaa9oCIQCagC2aag9CuVFLifhEM+VgaWGYgAqFpzyp0P3R6V3DnwQg01q1sHz8INiKZBCiBHWGWQs0sqPXEAeQ8Og5VeB/ZRkEH+nhQUVpiAA+YRrgAhlDsof3+rcDsSDP8b+17aP5Mfc="
+}

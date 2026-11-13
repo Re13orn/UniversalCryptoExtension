@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "engineBuild": "rhino-1.8.1-sandbox-v1",
+  "rules": [
+    {
+      "id": "04-gcm-split-tag-aad",
+      "name": "04-gcm-split-tag-aad",
+      "category": "可验证示例",
+      "description": "合成 Base64 key；nested data、分离 tag，AAD 为 METHOD|path。",
+      "enabled": false,
+      "priority": 100,
+      "showInEditor": true,
+      "condition": {
+        "hosts": [
+          "api.example.test"
+        ],
+        "paths": [
+          "/api/*"
+        ],
+        "methods": [
+          "POST"
+        ],
+        "toolSource": "ANY"
+      },
+      "requestActions": [],
+      "responseActions": [
+        {
+          "actionType": "decrypt",
+          "targetType": "body",
+          "processor": "script",
+          "enabled": true,
+          "config": {
+            "executionPhase": "response-display",
+            "inputSource": "response-body",
+            "scriptCode": "var obj=JSON.parse(content);\nvar key=Bytes.fromBase64('AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=');\nvar data=obj.data;\nvar ct=Bytes.concat(Bytes.fromBase64(data.ciphertext),Bytes.fromBase64(data.tag));\nvar aad=Bytes.utf8(request.getMethod()+'|'+request.getPath());\nreturn Bytes.text(Crypto.aesGcmDecrypt(key,Bytes.fromBase64(data.iv),ct,aad));"
+          }
+        }
+      ]
+    }
+  ]
+}

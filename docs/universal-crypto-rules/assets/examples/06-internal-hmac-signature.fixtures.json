@@ -1,0 +1,22 @@
+{
+  "cases": [
+    {
+      "name": "method newline path newline body",
+      "direction": "request",
+      "route": "wire",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"a\":1}",
+      "expect": {
+        "body": "{\"a\":1}",
+        "headers": {
+          "X-Signature": "29f6a785427ea7b2fa19bd988be9fe1dd54be4dcc7ec42912e1c3c2a13eee498"
+        },
+        "success": true
+      }
+    }
+  ]
+}

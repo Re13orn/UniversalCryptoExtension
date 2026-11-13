@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "engineBuild": "rhino-1.8.1-sandbox-v1",
+  "rules": [
+    {
+      "id": "intercept-response-edit",
+      "name": "响应展示与编辑后重新加密（合成向量）",
+      "category": "回归验证",
+      "enabled": false,
+      "priority": 1,
+      "showInEditor": true,
+      "condition": {
+        "hosts": [
+          "api.example.test"
+        ],
+        "paths": [
+          "/api/demo"
+        ],
+        "methods": [
+          "POST"
+        ],
+        "toolSource": "ANY"
+      },
+      "requestActions": [],
+      "responseActions": [
+        {
+          "actionType": "decrypt",
+          "targetType": "body",
+          "processor": "script",
+          "enabled": true,
+          "config": {
+            "executionPhase": "response-display",
+            "scriptCode": "return Bytes.text(Crypto.aesGcmDecrypt(Bytes.fromBase64('AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8='),Bytes.fromBase64('AAECAwQFBgcICQoL'),Bytes.fromBase64(content),Bytes.utf8(request.getMethod()+'|'+request.getPath()+'|'+request.getOriginalHeader('X-Nonce'))));"
+          }
+        },
+        {
+          "actionType": "encrypt",
+          "targetType": "body",
+          "processor": "script",
+          "enabled": true,
+          "config": {
+            "executionPhase": "response-editor-send",
+            "scriptCode": "return Bytes.toBase64(Crypto.aesGcmEncrypt(Bytes.fromBase64('AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8='),Bytes.fromBase64('AAECAwQFBgcICQoL'),Bytes.utf8(content),Bytes.utf8(request.getMethod()+'|'+request.getPath()+'|'+request.getOriginalHeader('X-Nonce'))));"
+          }
+        },
+        {
+          "actionType": "sign",
+          "targetType": "header",
+          "processor": "script",
+          "enabled": true,
+          "config": {
+            "executionPhase": "response-editor-send",
+            "scriptCode": "return Bytes.toBase64(Crypto.hmacSha256(Bytes.fromBase64('AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8='),Bytes.utf8(content)));",
+            "inputSource": "response-body"
+          },
+          "targetName": "X-Response-Signature"
+        }
+      ]
+    }
+  ]
+}

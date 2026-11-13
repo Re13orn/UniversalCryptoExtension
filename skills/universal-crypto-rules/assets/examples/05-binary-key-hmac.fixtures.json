@@ -1,0 +1,22 @@
+{
+  "cases": [
+    {
+      "name": "sign body using decoded binary key",
+      "direction": "request",
+      "route": "wire",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"a\":1}",
+      "expect": {
+        "body": "{\"a\":1}",
+        "headers": {
+          "X-Signature": "TgbYjsq59tgwQtFmsxUofBvnVQdUA47aNtkXxKtNYyw="
+        },
+        "success": true
+      }
+    }
+  ]
+}

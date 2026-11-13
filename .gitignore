@@ -1,0 +1,26 @@
+# Build outputs and test state
+/target/
+/dependency-reduced-pom.xml
+__pycache__/
+*.py[cod]
+*.log
+
+# Local tooling, editor state and captures
+.DS_Store
+/.idea/
+/.vscode/
+/.claude/
+/.gemini-clipboard/
+/.review-backup/
+/recordings/
+/screenshots/
+*.iml
+
+# Local rule exports, settings and credentials
+/.universal-crypto/
+/local/
+*.local.json
+.env
+.env.*
+*.pem
+*.key

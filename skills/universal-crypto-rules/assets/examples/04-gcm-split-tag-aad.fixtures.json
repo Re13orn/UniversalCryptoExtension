@@ -1,0 +1,34 @@
+{
+  "cases": [
+    {
+      "name": "nested ciphertext and detached tag",
+      "direction": "response",
+      "route": "response-display",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"data\":{\"iv\":\"AAECAwQFBgcICQoL\",\"ciphertext\":\"L2e6d6o=\",\"tag\":\"6z7TS4X/L/KBprNqd6qODQ==\"}}",
+      "expect": {
+        "body": "hello",
+        "success": true
+      }
+    },
+    {
+      "name": "AAD path changed rejects authentication",
+      "direction": "response",
+      "route": "response-display",
+      "method": "POST",
+      "url": "https://api.example.test/api/other",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"data\":{\"iv\":\"AAECAwQFBgcICQoL\",\"ciphertext\":\"L2e6d6o=\",\"tag\":\"6z7TS4X/L/KBprNqd6qODQ==\"}}",
+      "expect": {
+        "success": false,
+        "errors": 1
+      }
+    }
+  ]
+}

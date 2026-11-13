@@ -1,0 +1,80 @@
+{
+  "cases": [
+    {
+      "name": "request plaintext editor",
+      "direction": "request",
+      "route": "display",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"salt\":\"ZXhhbXBsZS1zYWx0LTEyMw==\",\"iv\":\"AAECAwQFBgcICQoL\",\"ciphertext\":\"xI1lwo5i/Znt3BkFqSBOq3bRo937gUxVBQ1PSLJs+jLkPpjF6bPZlRg=\"}",
+      "expect": {
+        "body": "{\"message\":\"hello中文\"}",
+        "success": true
+      }
+    },
+    {
+      "name": "response plaintext view",
+      "direction": "response",
+      "route": "response-display",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"salt\":\"ZXhhbXBsZS1zYWx0LTEyMw==\",\"iv\":\"AAECAwQFBgcICQoL\",\"ciphertext\":\"xI1lwo5i/Znt3BkFqSBOq3bRo937gUxVBQ1PSLJs+jLkPpjF6bPZlRg=\"}",
+      "expect": {
+        "body": "{\"message\":\"hello中文\"}",
+        "success": true
+      }
+    },
+    {
+      "name": "tag tamper rejected",
+      "direction": "response",
+      "route": "response-display",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"salt\":\"ZXhhbXBsZS1zYWx0LTEyMw==\",\"iv\":\"AAECAwQFBgcICQoL\",\"ciphertext\":\"xI1lwo5i/Znt3BkFqSBOq3bRo937gUxVBQ1PSLJs+jLkPpjF6bPZlRk=\"}",
+      "expect": {
+        "success": false,
+        "errors": 1
+      }
+    },
+    {
+      "name": "encrypt edited request",
+      "direction": "request",
+      "route": "editor-send",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"message\":\"hello中文\"}",
+      "expect": {
+        "success": true,
+        "unchanged": false
+      }
+    },
+    {
+      "name": "Repeater second pass does not encrypt ciphertext again",
+      "direction": "request",
+      "route": "wire",
+      "method": "POST",
+      "url": "https://api.example.test/api/demo",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{\"salt\":\"ZXhhbXBsZS1zYWx0LTEyMw==\",\"iv\":\"AAECAwQFBgcICQoL\",\"ciphertext\":\"xI1lwo5i/Znt3BkFqSBOq3bRo937gUxVBQ1PSLJs+jLkPpjF6bPZlRg=\"}",
+      "expect": {
+        "body": "{\"salt\":\"ZXhhbXBsZS1zYWx0LTEyMw==\",\"iv\":\"AAECAwQFBgcICQoL\",\"ciphertext\":\"xI1lwo5i/Znt3BkFqSBOq3bRo937gUxVBQ1PSLJs+jLkPpjF6bPZlRg=\"}",
+        "unchanged": true,
+        "success": true
+      }
+    }
+  ]
+}

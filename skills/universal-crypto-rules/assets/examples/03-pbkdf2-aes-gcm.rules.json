@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "engineBuild": "rhino-1.8.1-sandbox-v1",
+  "rules": [
+    {
+      "id": "03-pbkdf2-aes-gcm",
+      "name": "03-pbkdf2-aes-gcm",
+      "category": "可验证示例",
+      "description": "合成密码和 PBKDF2 迭代次数，只用于验证；部署时必须替换为真实协议值。editor-send 有密文防重。",
+      "enabled": false,
+      "priority": 100,
+      "showInEditor": true,
+      "condition": {
+        "hosts": [
+          "api.example.test"
+        ],
+        "paths": [
+          "/api/*"
+        ],
+        "methods": [
+          "POST"
+        ],
+        "toolSource": "ANY"
+      },
+      "requestActions": [
+        {
+          "actionType": "decrypt",
+          "targetType": "body",
+          "processor": "script",
+          "enabled": true,
+          "config": {
+            "executionPhase": "display",
+            "inputSource": "request-body",
+            "scriptCode": "var obj=JSON.parse(content);\nif(typeof obj.ciphertext!=='string'||typeof obj.iv!=='string'||typeof obj.salt!=='string') return null;\nvar key=Crypto.pbkdf2('example-password',Bytes.fromBase64(obj.salt),1000,256);\nreturn Bytes.text(Crypto.aesGcmDecrypt(key,Bytes.fromBase64(obj.iv),Bytes.fromBase64(obj.ciphertext),null));"
+          }
+        },
+        {
+          "actionType": "encrypt",
+          "targetType": "body",
+          "processor": "script",
+          "enabled": true,
+          "config": {
+            "executionPhase": "editor-send",
+            "inputSource": "request-body",
+            "scriptCode": "var obj=JSON.parse(content);\nif(typeof obj.ciphertext==='string' && typeof obj.iv==='string' && typeof obj.salt==='string') {\n  if(Bytes.fromBase64(obj.iv).length===12 && Bytes.fromBase64(obj.ciphertext).length>=16) return null;\n  throw new Error('Malformed encrypted envelope');\n}\nvar salt=Crypto.randomBytes(16);\nvar iv=Crypto.randomBytes(12);\nvar key=Crypto.pbkdf2('example-password',salt,1000,256);\nvar cipher=Crypto.aesGcmEncrypt(key,iv,Bytes.utf8(content),null);\nreturn JSON.stringify({salt:Bytes.toBase64(salt),iv:Bytes.toBase64(iv),ciphertext:Bytes.toBase64(cipher)});",
+            "editorOnly": true
+          }
+        }
+      ],
+      "responseActions": [
+        {
+          "actionType": "decrypt",
+          "targetType": "body",
+          "processor": "script",
+          "enabled": true,
+          "config": {
+            "executionPhase": "response-display",
+            "inputSource": "response-body",
+            "scriptCode": "var obj=JSON.parse(content);\nif(typeof obj.ciphertext!=='string'||typeof obj.iv!=='string'||typeof obj.salt!=='string') return null;\nvar key=Crypto.pbkdf2('example-password',Bytes.fromBase64(obj.salt),1000,256);\nreturn Bytes.text(Crypto.aesGcmDecrypt(key,Bytes.fromBase64(obj.iv),Bytes.fromBase64(obj.ciphertext),null));"
+          }
+        }
+      ]
+    }
+  ]
+}

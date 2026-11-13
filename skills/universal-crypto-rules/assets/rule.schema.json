@@ -1,0 +1,283 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UniversalCryptoExtension authoring structure (2026-10-14)",
+  "description": "Structural authoring schema; config keys are catalogued but algorithm requirements are validated with the real processors. No network resolver required.",
+  "oneOf": [
+    {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/rule"
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "engineBuild",
+        "rules"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "engineBuild": {
+          "const": "rhino-1.8.1-sandbox-v1"
+        },
+        "rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/rule"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "condition"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "priority": {
+          "type": "integer"
+        },
+        "showInEditor": {
+          "type": "boolean"
+        },
+        "condition": {
+          "$ref": "#/$defs/condition"
+        },
+        "requestActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/action"
+          }
+        },
+        "responseActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/action"
+          }
+        },
+        "requestActionCount": {
+          "type": "integer"
+        },
+        "responseActionCount": {
+          "type": "integer"
+        }
+      }
+    },
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "hosts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "methods": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "contentPattern": {
+          "type": "string"
+        },
+        "toolSource": {
+          "type": "string"
+        },
+        "contentType": {
+          "type": "string"
+        }
+      }
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "processor",
+        "actionType",
+        "targetType",
+        "config"
+      ],
+      "properties": {
+        "processor": {
+          "enum": [
+            "crypto",
+            "signature",
+            "field",
+            "script"
+          ]
+        },
+        "actionType": {
+          "enum": [
+            "process",
+            "execute",
+            "encrypt",
+            "decrypt",
+            "sign",
+            "verify",
+            "replace",
+            "add",
+            "remove"
+          ]
+        },
+        "targetType": {
+          "enum": [
+            "body",
+            "header",
+            "field",
+            "variable"
+          ]
+        },
+        "targetName": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string"
+        },
+        "config": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "algorithm": {},
+            "keySource": {},
+            "keyValue": {},
+            "lookupMethod": {},
+            "lookupEndpoint": {},
+            "inputSource": {
+              "enum": [
+                "request-body",
+                "response-body",
+                "header",
+                "variable"
+              ]
+            },
+            "responseKeyPath": {},
+            "fallbackLookup": {},
+            "signContent": {},
+            "timestampHeader": {},
+            "cryptoProvider": {},
+            "keyFormat": {},
+            "payloadFormat": {},
+            "cipherField": {},
+            "plainField": {},
+            "ivField": {},
+            "ivLiteralValue": {},
+            "ivFormat": {},
+            "cipherFormat": {},
+            "plainFormat": {},
+            "charset": {},
+            "aesMode": {},
+            "padding": {},
+            "gcmTagLength": {},
+            "rsaPublicKey": {},
+            "rsaPrivateKey": {},
+            "rsaPadding": {},
+            "rsaMode": {},
+            "apiRequestTemplate": {},
+            "apiResponsePath": {},
+            "apiFieldMap": {},
+            "apiHeaders": {},
+            "apiContentType": {},
+            "lookupHttpMethod": {},
+            "encryptEndpoint": {},
+            "encryptMethod": {},
+            "decryptEndpoint": {},
+            "decryptMethod": {},
+            "signEndpoint": {},
+            "signMethod": {},
+            "verifyEndpoint": {},
+            "verifyMethod": {},
+            "operation": {},
+            "fieldPath": {},
+            "from": {},
+            "to": {},
+            "executionPhase": {
+              "type": "string",
+              "pattern": "^(display|send|response-display|response-send|response-editor-send|editor-send|always)(\\s*,\\s*(display|send|response-display|response-send|response-editor-send|editor-send|always))*$"
+            },
+            "maxContentLength": {},
+            "expectedSignature": {},
+            "signatureHeader": {},
+            "signatureSource": {},
+            "signatureFieldPath": {},
+            "signatureQueryParam": {},
+            "customSignTemplate": {},
+            "timestampFormat": {},
+            "overwrite": {},
+            "ignoreNotFound": {},
+            "sortKeys": {},
+            "pairSeparator": {},
+            "kvSeparator": {},
+            "urlEncodeValues": {},
+            "hashKeyPlacement": {},
+            "signatureHexCase": {},
+            "headerTemplates": {},
+            "scriptCode": {
+              "type": "string",
+              "minLength": 1
+            },
+            "scriptEngine": {},
+            "inputName": {},
+            "variableName": {},
+            "editorOnly": {
+              "oneOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "true",
+                    "false"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
