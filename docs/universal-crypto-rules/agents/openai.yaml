@@ -1,4 +1,4 @@
 interface:
-  display_name: "Universal Crypto 规则编写"
-  short_description: "依据真实插件行为编写、验证加解密、签名与字段处理规则，输出可导入配置及脱敏样例"
-  default_prompt: "使用 $universal-crypto-rules，根据提供的协议和报文编写并离线验证可导入的 Burp 加解密规则。"
+  display_name: "Universal Crypto Rules"
+  short_description: "Author and validate importable Burp Suite rules"
+  default_prompt: "Use $universal-crypto-rules to write and validate an importable Burp Suite rule from the provided protocol and HTTP messages."
